@@ -45,6 +45,7 @@ public interface AccessTokenManager {
      *
      * @param accessToken access token
      * @param expireTime  过期时间/单位s
+     * @return access token key
      */
     String save(AccessToken accessToken, Long expireTime);
 

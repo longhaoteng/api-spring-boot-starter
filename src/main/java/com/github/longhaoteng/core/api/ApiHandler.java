@@ -19,6 +19,7 @@ public interface ApiHandler {
      * @param response    响应
      * @param resp        响应参数
      * @param accessToken token
+     * @throws ApiException api exception
      */
     void handle(Request request, Response response, Map<String, Object> resp, AccessToken accessToken) throws ApiException;
 }
