@@ -36,7 +36,7 @@ spring:
 
 - api
 
-- ```java
+  ```java
   @API(value = "user.test")
   public class Test extends BaseApi {
       
@@ -93,7 +93,7 @@ spring:
 
 - js
 
-- ```js
+  ```js
   method: 'post',
   headers: {
     'Content-Type': 'application/json',
@@ -118,21 +118,21 @@ spring:
 
 - accessToken操作
 
-- ```java
+  ```java
   @Autowired
   AccessTokenManager accessTokenManager;
   
   @Override
   public void handle(Request request, Response response, Map<String, Object> resp, AccessToken accessToken) throws ApiException {
-    // login
-    String key = DigestUtils.md5Hex(admin.toString() + LocalDateTime.now().toString());
-    // 管理员权限添加前缀"admin."，@API(admin = true)  普通用户前缀"user."，@API(admin = false)
-    String token = "admin." + key;
-    // String token = "user." + key;
-    accessTokenManager.save(token, AccessToken.builder().user(admin).token(token).build(), 7200L);
-    resp.put("access_token", key);
+      // login
+      String key = DigestUtils.md5Hex(admin.toString() + LocalDateTime.now().toString());
+      // 管理员权限添加前缀"admin."，@API(admin = true)  普通用户前缀"user."，@API(admin = false)
+      String token = "admin." + key;
+      // String token = "user." + key;
+      accessTokenManager.save(token, AccessToken.builder().user(admin).token(token).build(), 7200L);
+      resp.put("access_token", key);
   
-    // logout
-    accessTokenManager.remove(accessToken.getToken());
+      // logout
+      accessTokenManager.remove(accessToken.getToken());
   }
   ```
