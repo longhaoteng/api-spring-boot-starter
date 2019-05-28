@@ -95,19 +95,19 @@ spring:
 
 - ```js
   method: 'post',
-          headers: {
-            'Content-Type': 'application/json',
-            auth: 'auth字符串'
-          },
-          url: 'http://xxx.com/api',
-          data: {
-    							service: 'user.test', // 请求的api value
-    							params: { // 参数对象
-                    "access_token":"xxx", // @API(needLogin = true)需要
-                    'username': 'test',
-                    'password': '123'
-                  }
-  				}
+  headers: {
+    'Content-Type': 'application/json',
+    auth: 'auth字符串'
+  },
+  url: 'http://xxx.com/api',
+  data: {
+    service: 'user.test', // 请求的api value
+    params: { // 参数对象
+        "access_token":"xxx", // @API(needLogin = true)需要
+        'username': 'test',
+        'password': '123'
+    }
+  }
   ```
 
 - 注解@API
