@@ -1,4 +1,5 @@
-[![Latest release](https://img.shields.io/github/release/longhaoteng/api-spring-boot-starter.svg)](https://github.com/longhaoteng/api-spring-boot-starter/releases/latest)[![License](https://img.shields.io/hexpm/l/plug.svg?maxAge=2592000)](https://github.com/longhaoteng/api-spring-boot-starter/blob/master/LICENSE)
+[![Latest release](https://img.shields.io/github/release/longhaoteng/api-spring-boot-starter.svg)](https://github.com/longhaoteng/api-spring-boot-starter/releases/latest)
+[![License](https://img.shields.io/hexpm/l/plug.svg?maxAge=2592000)](https://github.com/longhaoteng/api-spring-boot-starter/blob/master/LICENSE)
 
 # Api-Spring-Boot-Starter
 
