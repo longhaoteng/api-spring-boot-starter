@@ -36,7 +36,7 @@ spring:
 
 - api
 
-- ```java
+  ```java
   @API(value = "user.test")
   public class Test extends BaseApi {
       
@@ -93,7 +93,7 @@ spring:
 
 - js
 
-- ```js
+  ```js
   method: 'post',
   headers: {
     'Content-Type': 'application/json',
@@ -118,7 +118,7 @@ spring:
 
 - accessToken操作
 
-- ```java
+  ```java
   @Autowired
   AccessTokenManager accessTokenManager;
   
