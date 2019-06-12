@@ -1,7 +1,7 @@
 package com.github.longhaoteng.core.api;
 
+import com.github.longhaoteng.core.common.ApiProperties;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -12,8 +12,8 @@ import javax.servlet.http.HttpServletRequest;
 @RestController
 public class Application {
 
-    @Value("${spring.api.auth}")
-    private String auth;
+    @Autowired
+    private ApiProperties properties;
 
     @Autowired
     private ApiEngine apiEngine;
@@ -22,10 +22,10 @@ public class Application {
     public Response api(HttpServletRequest httpServletRequest, @RequestBody Request request) {
         String auth = httpServletRequest.getHeader("auth");
         request.setServlet(httpServletRequest);
-        if (StringUtils.isEmpty(this.auth)) {
+        if (StringUtils.isEmpty(properties.getAuth())) {
             return apiEngine.handle(request);
         } else {
-            return this.auth.equals(auth) ? apiEngine.handle(request) : null;
+            return properties.getAuth().equals(auth) ? apiEngine.handle(request) : null;
         }
     }
 }
