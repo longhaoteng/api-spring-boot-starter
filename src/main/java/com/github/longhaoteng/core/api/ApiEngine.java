@@ -3,9 +3,12 @@ package com.github.longhaoteng.core.api;
 
 import com.github.longhaoteng.core.common.AccessToken;
 import com.github.longhaoteng.core.common.AccessTokenManager;
+import com.github.longhaoteng.core.common.ApiProperties;
+import com.github.longhaoteng.core.enums.ApiLoc;
 import com.github.longhaoteng.core.exception.ApiException;
 import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 
 import java.util.HashMap;
@@ -19,6 +22,9 @@ import java.util.Map;
  */
 @Slf4j
 public class ApiEngine {
+
+    @Autowired
+    private ApiProperties properties;
 
     // access token manager
     private AccessTokenManager accessTokenManager;
@@ -48,7 +54,8 @@ public class ApiEngine {
      * @return response
      */
     public Response handle(Request request) {
-        ApiHandler handler = mapping.get(request.getService());
+        ApiHandler handler = properties.getLoc() != null && properties.getLoc().equals(ApiLoc.HEADER) ? mapping.get(
+                request.getServlet().getHeader("service")) : mapping.get(request.getService());
         if (handler == null) {
             return Response.builder().code(HttpStatus.NOT_FOUND.value()).message("API not found.").build();
         }

@@ -28,6 +28,10 @@ spring:
   api:
     auth:  # or auth: '' 为空则不开启header auth字符串验证
            # auth: 'test' 开启验证，验证字符串为test
+    loc: # api value在request的位置 参照js请求示例
+         # HEADER  api value在request的请求头中
+         # BODY  api value在request的请求体中
+         # default：BODY
 ```
 
 
@@ -97,11 +101,12 @@ spring:
   method: 'post',
   headers: {
     'Content-Type': 'application/json',
-    auth: 'auth字符串'
+    auth: 'auth字符串' // header auth字符串验证
+    // service: 'user.test', // 请求的api value  spring.api.loc=HEADER
   },
   url: 'http://xxx.com/api',
   data: {
-    service: 'user.test', // 请求的api value
+    service: 'user.test', // 请求的api value  spring.api.loc=BODY
     params: { // 参数对象
         "access_token":"xxx", // @API(needLogin = true)需要
         'username': 'test',
