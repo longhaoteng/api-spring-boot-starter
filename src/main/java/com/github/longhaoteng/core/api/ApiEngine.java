@@ -50,7 +50,7 @@ public class ApiEngine {
     public Response handle(Request request) {
         ApiHandler handler = mapping.get(request.getService());
         if (handler == null) {
-            return Response.builder().code(HttpStatus.NOT_FOUND.value()).build();
+            return Response.builder().code(HttpStatus.NOT_FOUND.value()).message("API not found.").build();
         }
         try {
             String token = request.getParameter("access_token");
@@ -60,7 +60,7 @@ public class ApiEngine {
             if (api.needLogin()) {
                 if (token == null) {
                     // 未登录
-                    return Response.builder().code(HttpStatus.UNAUTHORIZED.value()).build();
+                    return Response.builder().code(HttpStatus.UNAUTHORIZED.value()).message("Not logged in.").build();
                 }
                 // 管理员
                 if (api.admin()) {
@@ -71,7 +71,8 @@ public class ApiEngine {
                 accessToken = accessTokenManager.find(token);
                 if (accessToken == null) {
                     // 登录过期
-                    return Response.builder().code(HttpStatus.PROXY_AUTHENTICATION_REQUIRED.value()).build();
+                    return Response.builder().code(HttpStatus.PROXY_AUTHENTICATION_REQUIRED.value()).message(
+                            "Login expires.").build();
                 } else {
                     // 重置token过期时间
                     accessTokenManager.setExpireTime(token, 7200L);
@@ -81,14 +82,14 @@ public class ApiEngine {
             Map<String, Object> resp = Maps.newHashMap();
             handler.handle(request, response, resp, accessToken);
             if (response.getCode() == null) {
-                response.setCode(HttpStatus.OK.value());
+                response.setCode(HttpStatus.OK.value()).setMessage("Success.");
             }
             return response.setData(resp);
         } catch (ApiException e) {
             return Response.builder().code(e.getCode()).message(e.getMessage()).build();
         } catch (Exception e) {
             log.error("handle", e);
-            return Response.builder().code(HttpStatus.INTERNAL_SERVER_ERROR.value()).build();
+            return Response.builder().code(HttpStatus.INTERNAL_SERVER_ERROR.value()).message(e.getMessage()).build();
         }
     }
 }

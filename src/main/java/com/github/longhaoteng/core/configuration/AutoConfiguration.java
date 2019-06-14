@@ -25,17 +25,6 @@ import java.util.List;
 @EnableConfigurationProperties(ApiProperties.class)
 public class AutoConfiguration {
 
-    private final ApiProperties properties;
-
-    /**
-     * Constructor for creating auto configuration.
-     *
-     * @param properties properties
-     */
-    public AutoConfiguration(ApiProperties properties) {
-        this.properties = properties;
-    }
-
     @Bean
     @ConditionalOnMissingBean
     public Application api() {
