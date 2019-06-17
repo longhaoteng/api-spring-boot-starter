@@ -7,7 +7,7 @@ api core for spring boot starter
 
 
 
-## Maven
+## Maven [![Latest release](https://img.shields.io/badge/dynamic/json.svg?color=lightgrey&label=latest&query=tag_name&url=https://api.github.com/repos/longhaoteng/api-spring-boot-starter/releases/latest)](https://github.com/longhaoteng/api-spring-boot-starter/releases/latest)
 
 ```XML
 <dependency>
