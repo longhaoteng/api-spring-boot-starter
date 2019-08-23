@@ -20,6 +20,9 @@ import java.io.Serializable;
 @Accessors(chain = true)
 public class AccessToken implements Serializable {
 
+    // user id
+    private Object userId;
+
     // token
     private String token;
 

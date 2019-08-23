@@ -134,7 +134,7 @@ spring:
       // 管理员权限添加前缀"admin."，@API(admin = true)  普通用户前缀"user."，@API(admin = false)
       String token = "admin." + key;
       // String token = "user." + key;
-      accessTokenManager.save(token, AccessToken.builder().user(admin).token(token).build(), 7200L);
+      accessTokenManager.save(token, AccessToken.builder().userId(admin.getId()).user(admin).token(token).build(), 7200L);
       resp.put("access_token", key);
   
       // logout
