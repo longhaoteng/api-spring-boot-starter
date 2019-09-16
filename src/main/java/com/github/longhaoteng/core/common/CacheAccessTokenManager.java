@@ -77,6 +77,7 @@ public class CacheAccessTokenManager implements AccessTokenManager {
      *
      * @param accessToken access token
      * @param expireTime  expire time，unit s
+     * @return access token key
      */
     @Override
     public String save(AccessToken accessToken, Long expireTime) {
@@ -90,6 +91,7 @@ public class CacheAccessTokenManager implements AccessTokenManager {
      *
      * @param accessToken access token
      * @param role        access token role
+     * @return access token key
      */
     @Override
     public String save(AccessToken accessToken, String role) {
@@ -104,6 +106,7 @@ public class CacheAccessTokenManager implements AccessTokenManager {
      * @param accessToken access token
      * @param role        access token role
      * @param expireTime  expire time，unit s
+     * @return access token key
      */
     @Override
     public String save(AccessToken accessToken, String role, Long expireTime) {

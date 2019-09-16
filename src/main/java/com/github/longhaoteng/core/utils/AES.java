@@ -25,6 +25,7 @@ public class AES {
      * @param key   key
      * @param value value
      * @return encrypted
+     * @throws Exception exception
      */
     public static String encrypt(String key, String value) throws Exception {
         key = assistant(key);
@@ -42,6 +43,7 @@ public class AES {
      * @param key       key
      * @param encrypted encrypted
      * @return decrypted
+     * @throws Exception exception
      */
     public static String decrypt(String key, String encrypted) throws Exception {
         key = assistant(key);

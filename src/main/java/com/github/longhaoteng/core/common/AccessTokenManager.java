@@ -63,6 +63,7 @@ public interface AccessTokenManager {
      *
      * @param accessToken access token
      * @param role        access token role
+     * @return access token key
      */
     String save(AccessToken accessToken, String role);
 
@@ -72,6 +73,7 @@ public interface AccessTokenManager {
      * @param accessToken access token
      * @param role        access token role
      * @param expireTime  过期时间/单位s
+     * @return access token key
      */
     String save(AccessToken accessToken, String role, Long expireTime);
 
