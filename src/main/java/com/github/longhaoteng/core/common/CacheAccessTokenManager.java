@@ -56,7 +56,7 @@ public class CacheAccessTokenManager implements AccessTokenManager {
     @Override
     public String save(AccessToken accessToken) {
         String key = DigestUtils.md5Hex(accessToken.toString() + LocalDateTime.now().toString());
-        RedisHelper.set(key, accessToken);
+        RedisHelper.set(key, accessToken.setToken(key));
         return key;
     }
 
@@ -81,7 +81,7 @@ public class CacheAccessTokenManager implements AccessTokenManager {
     @Override
     public String save(AccessToken accessToken, Long expireTime) {
         String key = DigestUtils.md5Hex(accessToken.toString() + LocalDateTime.now().toString());
-        RedisHelper.set(key, accessToken, expireTime);
+        RedisHelper.set(key, accessToken.setToken(key), expireTime);
         return key;
     }
 
@@ -94,7 +94,7 @@ public class CacheAccessTokenManager implements AccessTokenManager {
     @Override
     public String save(AccessToken accessToken, String role) {
         String key = DigestUtils.md5Hex(accessToken.toString() + LocalDateTime.now().toString());
-        RedisHelper.set(role + SEPARATOR + key, accessToken);
+        RedisHelper.set(role + SEPARATOR + key, accessToken.setToken(role + SEPARATOR + key));
         return key;
     }
 
@@ -108,7 +108,7 @@ public class CacheAccessTokenManager implements AccessTokenManager {
     @Override
     public String save(AccessToken accessToken, String role, Long expireTime) {
         String key = DigestUtils.md5Hex(accessToken.toString() + LocalDateTime.now().toString());
-        RedisHelper.set(role + SEPARATOR + key, accessToken, expireTime);
+        RedisHelper.set(role + SEPARATOR + key, accessToken.setToken(role + SEPARATOR + key), expireTime);
         return key;
     }
 
