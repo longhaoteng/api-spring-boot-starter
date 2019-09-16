@@ -16,6 +16,15 @@ public interface AccessTokenManager {
     AccessToken find(String key);
 
     /**
+     * Find access token by key
+     *
+     * @param key  access token key
+     * @param role access token role
+     * @return access token
+     */
+    AccessToken find(String key, String role);
+
+    /**
      * Save access token
      *
      * @param key         access token key
@@ -48,6 +57,23 @@ public interface AccessTokenManager {
      * @return access token key
      */
     String save(AccessToken accessToken, Long expireTime);
+
+    /**
+     * Save access token
+     *
+     * @param accessToken access token
+     * @param role        access token role
+     */
+    String save(AccessToken accessToken, String role);
+
+    /**
+     * Save access token
+     *
+     * @param accessToken access token
+     * @param role        access token role
+     * @param expireTime  过期时间/单位s
+     */
+    String save(AccessToken accessToken, String role, Long expireTime);
 
     /**
      * Remove access token

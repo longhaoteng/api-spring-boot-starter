@@ -5,7 +5,7 @@
 
     <groupId>com.github.longhaoteng</groupId>
     <artifactId>api-spring-boot-starter</artifactId>
-    <version>0.0.3</version>
+    <version>1.0.0</version>
     <packaging>jar</packaging>
 
     <name>api core</name>
@@ -72,6 +72,16 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.7</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>1.13</version>
         </dependency>
         <dependency>
             <groupId>com.google.guava</groupId>

@@ -19,4 +19,9 @@ public class ApiProperties {
     // api value在request的位置
     private ApiLoc loc;
 
+    // 每次请求后重置access token有效时间
+    private Long restExpireTime;
+
+    // aes key
+    private String key;
 }

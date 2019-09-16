@@ -8,6 +8,7 @@ import com.github.longhaoteng.core.enums.ApiLoc;
 import com.github.longhaoteng.core.exception.ApiException;
 import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 
@@ -60,29 +61,32 @@ public class ApiEngine {
             return Response.builder().code(HttpStatus.NOT_FOUND.value()).message("API not found.").build();
         }
         try {
-            String token = request.getParameter("access_token");
+            String token = request.getParameter("token");
             API api = handler.getClass().getAnnotation(API.class);
             AccessToken accessToken = null;
             // need login
             if (api.needLogin()) {
                 if (token == null) {
-                    // 未登录
+                    // not logged in
                     return Response.builder().code(HttpStatus.UNAUTHORIZED.value()).message("Not logged in.").build();
                 }
-                // 管理员
-                if (api.admin()) {
-                    token = "admin." + token;
+                // role
+                if (StringUtils.isNotBlank(api.role())) {
+                    accessToken = accessTokenManager.find(token, api.role());
                 } else {
-                    token = "user." + token;
+                    accessToken = accessTokenManager.find(token);
                 }
-                accessToken = accessTokenManager.find(token);
                 if (accessToken == null) {
-                    // 登录过期
-                    return Response.builder().code(HttpStatus.PROXY_AUTHENTICATION_REQUIRED.value()).message(
-                            "Login expires.").build();
+                    // login expires
+                    return Response.builder()
+                            .code(HttpStatus.PROXY_AUTHENTICATION_REQUIRED.value())
+                            .message("Login expires.")
+                            .build();
                 } else {
-                    // 重置token过期时间
-                    accessTokenManager.setExpireTime(token, 7200L);
+                    // reset token expiration time
+                    if (properties.getRestExpireTime() != null) {
+                        accessTokenManager.setExpireTime(token, properties.getRestExpireTime());
+                    }
                 }
             }
             Response response = Response.builder().build();

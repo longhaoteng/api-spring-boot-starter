@@ -21,7 +21,7 @@ public @interface API {
     // 是否需要登录
     boolean needLogin() default false;
 
-    // 是否管理员
-    boolean admin() default false;
+    // 角色
+    String role() default "";
 
 }
