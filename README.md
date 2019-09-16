@@ -32,6 +32,9 @@ spring:
          # HEADER  api value在request的请求头中
          # BODY  api value在request的请求体中
          # default：BODY
+    restExpireTime: # 每次请求后重置access token有效时间，类型Long
+                    # 不填则在请求后不重置有效时间
+    key: # 不为空表示接口开启AES加密 长度可以为16/24/32 即128/192/256bit(16/24/32bytes)             
 ```
 
 
@@ -105,10 +108,10 @@ spring:
     // service: 'user.test', // 请求的api value  spring.api.loc=HEADER
   },
   url: 'http://xxx.com/api',
-  data: {
+  data: { // 如果开启AES加密，data需为加密后的base64字符串，推荐使用crypto-js
     service: 'user.test', // 请求的api value  spring.api.loc=BODY
     params: { // 参数对象
-        "access_token":"xxx", // @API(needLogin = true)需要
+        "token":"xxx", // @API(needLogin = true)需要
         'username': 'test',
         'password': '123'
     }
@@ -118,8 +121,8 @@ spring:
 - 注解@API
 
   - value：api service，api唯一标识，通过前端传参service请求指定api。建议格式：业务对象.操作，例：user.login
-  - needLogin：默认值：false。标明接口是否需要登录权限，前端传参params.access_token
-  - admin：默认值：false。标明接口是否需要管理员权限
+  - needLogin：默认值：false。标明接口是否需要登录权限，前端传参params.token
+  - role：默认值：""。标明接口对应角色权限，比如admin/user，不同角色token在redis里的key前缀不一样，用于区分
 
 - accessToken操作
 
@@ -130,12 +133,11 @@ spring:
   @Override
   public void handle(Request request, Response response, Map<String, Object> resp, AccessToken accessToken) throws ApiException {
       // login
-      String key = DigestUtils.md5Hex(admin.toString() + LocalDateTime.now().toString());
-      // 管理员权限添加前缀"admin."，@API(admin = true)  普通用户前缀"user."，@API(admin = false)
-      String token = "admin." + key;
-      // String token = "user." + key;
-      accessTokenManager.save(token, AccessToken.builder().userId(admin.getId()).user(admin).token(token).build(), 7200L);
-      resp.put("access_token", key);
+      // @API(role = "")
+      String token = accessTokenManager.save(AccessToken.builder().userId(admin.getId()).user(admin).build(), 7200L);
+      // @API(role = "admin")
+      String token = accessTokenManager.save(AccessToken.builder().userId(admin.getId()).user(admin).build(), "admin", 7200L);
+      resp.put("token", token);
   
       // logout
       accessTokenManager.remove(accessToken.getToken());
