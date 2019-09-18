@@ -91,4 +91,13 @@ public interface AccessTokenManager {
      * @param expireTime 过期时间/单位s
      */
     void setExpireTime(String key, Long expireTime);
+
+    /**
+     * 设置一个key的过期时间
+     *
+     * @param key        key
+     * @param role       access token role
+     * @param expireTime 过期时间/单位s
+     */
+    void setExpireTime(String key, String role, Long expireTime);
 }

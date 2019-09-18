@@ -85,7 +85,11 @@ public class ApiEngine {
                 } else {
                     // reset token expiration time
                     if (properties.getRestExpireTime() != null) {
-                        accessTokenManager.setExpireTime(token, properties.getRestExpireTime());
+                        if (StringUtils.isNotBlank(api.role())) {
+                            accessTokenManager.setExpireTime(token, api.role(), properties.getRestExpireTime());
+                        } else {
+                            accessTokenManager.setExpireTime(token, properties.getRestExpireTime());
+                        }
                     }
                 }
             }

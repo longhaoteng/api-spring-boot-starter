@@ -135,4 +135,16 @@ public class CacheAccessTokenManager implements AccessTokenManager {
     public void setExpireTime(String key, Long expireTime) {
         RedisHelper.setExpireTime(key, expireTime);
     }
+
+    /**
+     * 设置一个key的过期时间
+     *
+     * @param key        key
+     * @param role       access token role
+     * @param expireTime 过期时间/单位s
+     */
+    @Override
+    public void setExpireTime(String key, String role, Long expireTime) {
+        RedisHelper.setExpireTime(role + SEPARATOR + key, expireTime);
+    }
 }
