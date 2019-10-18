@@ -133,9 +133,9 @@ spring:
   @Override
   public void handle(Request request, Response response, Map<String, Object> resp, AccessToken accessToken) throws ApiException {
       // login
-      // @API(role = "")
+      // @API(roles = "")
       String token = accessTokenManager.save(AccessToken.builder().userId(admin.getId()).user(admin).build(), 7200L);
-      // @API(role = "admin")
+      // @API(roles = "admin")
       String token = accessTokenManager.save(AccessToken.builder().userId(admin.getId()).user(admin).role("admin").build(), 7200L);
       resp.put("token", token);
   
