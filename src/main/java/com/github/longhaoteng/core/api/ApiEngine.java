@@ -70,8 +70,8 @@ public class ApiEngine {
                     return Response.builder().code(HttpStatus.UNAUTHORIZED.value()).message("Not logged in.").build();
                 }
                 // role
-                if (api.role().length > 0) {
-                    for (String role : api.role()) {
+                if (api.roles().length > 0) {
+                    for (String role : api.roles()) {
                         accessToken = accessTokenManager.find(token, role);
                         if (accessToken != null) break;
                     }
