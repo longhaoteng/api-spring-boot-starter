@@ -29,6 +29,9 @@ public class AccessToken implements Serializable {
     // user
     private Object user;
 
+    // role
+    private String role;
+
     // 用户登录时环境md5值
     private String label;
 

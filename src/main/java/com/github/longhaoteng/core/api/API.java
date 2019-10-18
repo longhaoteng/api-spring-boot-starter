@@ -22,6 +22,6 @@ public @interface API {
     boolean needLogin() default false;
 
     // 角色
-    String role() default "";
+    String[] role() default {};
 
 }

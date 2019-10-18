@@ -8,7 +8,6 @@ import com.github.longhaoteng.core.enums.ApiLoc;
 import com.github.longhaoteng.core.exception.ApiException;
 import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 
@@ -71,8 +70,11 @@ public class ApiEngine {
                     return Response.builder().code(HttpStatus.UNAUTHORIZED.value()).message("Not logged in.").build();
                 }
                 // role
-                if (StringUtils.isNotBlank(api.role())) {
-                    accessToken = accessTokenManager.find(token, api.role());
+                if (api.role().length > 0) {
+                    for (String role : api.role()) {
+                        accessToken = accessTokenManager.find(token, role);
+                        if (accessToken != null) break;
+                    }
                 } else {
                     accessToken = accessTokenManager.find(token);
                 }
@@ -85,11 +87,7 @@ public class ApiEngine {
                 } else {
                     // reset token expiration time
                     if (properties.getRestExpireTime() != null) {
-                        if (StringUtils.isNotBlank(api.role())) {
-                            accessTokenManager.setExpireTime(token, api.role(), properties.getRestExpireTime());
-                        } else {
-                            accessTokenManager.setExpireTime(token, properties.getRestExpireTime());
-                        }
+                        accessTokenManager.setExpireTime(accessToken.getToken(), properties.getRestExpireTime());
                     }
                 }
             }

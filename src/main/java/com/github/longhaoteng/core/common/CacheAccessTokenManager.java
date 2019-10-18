@@ -1,6 +1,7 @@
 package com.github.longhaoteng.core.common;
 
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.time.LocalDateTime;
 
@@ -44,7 +45,8 @@ public class CacheAccessTokenManager implements AccessTokenManager {
      */
     @Override
     public void save(String key, AccessToken accessToken) {
-        RedisHelper.set(key, accessToken);
+        String token = getToken(key, accessToken);
+        RedisHelper.set(token, accessToken.setToken(token));
     }
 
     /**
@@ -56,7 +58,8 @@ public class CacheAccessTokenManager implements AccessTokenManager {
     @Override
     public String save(AccessToken accessToken) {
         String key = DigestUtils.md5Hex(accessToken.toString() + LocalDateTime.now().toString());
-        RedisHelper.set(key, accessToken.setToken(key));
+        String token = getToken(key, accessToken);
+        RedisHelper.set(token, accessToken.setToken(key));
         return key;
     }
 
@@ -69,7 +72,8 @@ public class CacheAccessTokenManager implements AccessTokenManager {
      */
     @Override
     public void save(String key, AccessToken accessToken, Long expireTime) {
-        RedisHelper.set(key, accessToken, expireTime);
+        String token = getToken(key, accessToken);
+        RedisHelper.set(token, accessToken.setToken(token), expireTime);
     }
 
     /**
@@ -82,36 +86,8 @@ public class CacheAccessTokenManager implements AccessTokenManager {
     @Override
     public String save(AccessToken accessToken, Long expireTime) {
         String key = DigestUtils.md5Hex(accessToken.toString() + LocalDateTime.now().toString());
-        RedisHelper.set(key, accessToken.setToken(key), expireTime);
-        return key;
-    }
-
-    /**
-     * Save access token
-     *
-     * @param accessToken access token
-     * @param role        access token role
-     * @return access token key
-     */
-    @Override
-    public String save(AccessToken accessToken, String role) {
-        String key = DigestUtils.md5Hex(accessToken.toString() + LocalDateTime.now().toString());
-        RedisHelper.set(role + SEPARATOR + key, accessToken.setToken(role + SEPARATOR + key));
-        return key;
-    }
-
-    /**
-     * Save access token
-     *
-     * @param accessToken access token
-     * @param role        access token role
-     * @param expireTime  expire time，unit s
-     * @return access token key
-     */
-    @Override
-    public String save(AccessToken accessToken, String role, Long expireTime) {
-        String key = DigestUtils.md5Hex(accessToken.toString() + LocalDateTime.now().toString());
-        RedisHelper.set(role + SEPARATOR + key, accessToken.setToken(role + SEPARATOR + key), expireTime);
+        String token = getToken(key, accessToken);
+        RedisHelper.set(token, accessToken.setToken(key), expireTime);
         return key;
     }
 
@@ -137,14 +113,17 @@ public class CacheAccessTokenManager implements AccessTokenManager {
     }
 
     /**
-     * 设置一个key的过期时间
+     * Get token
      *
-     * @param key        key
-     * @param role       access token role
-     * @param expireTime 过期时间/单位s
+     * @param key         key
+     * @param accessToken access token
+     * @return
      */
-    @Override
-    public void setExpireTime(String key, String role, Long expireTime) {
-        RedisHelper.setExpireTime(role + SEPARATOR + key, expireTime);
+    private String getToken(String key, AccessToken accessToken) {
+        if (StringUtils.isBlank(accessToken.getRole())) {
+            return key;
+        } else {
+            return accessToken.getRole() + SEPARATOR + key;
+        }
     }
 }

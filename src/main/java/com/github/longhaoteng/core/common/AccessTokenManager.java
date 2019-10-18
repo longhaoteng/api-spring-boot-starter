@@ -59,25 +59,6 @@ public interface AccessTokenManager {
     String save(AccessToken accessToken, Long expireTime);
 
     /**
-     * Save access token
-     *
-     * @param accessToken access token
-     * @param role        access token role
-     * @return access token key
-     */
-    String save(AccessToken accessToken, String role);
-
-    /**
-     * Save access token
-     *
-     * @param accessToken access token
-     * @param role        access token role
-     * @param expireTime  过期时间/单位s
-     * @return access token key
-     */
-    String save(AccessToken accessToken, String role, Long expireTime);
-
-    /**
      * Remove access token
      *
      * @param key access token key
@@ -91,13 +72,4 @@ public interface AccessTokenManager {
      * @param expireTime 过期时间/单位s
      */
     void setExpireTime(String key, Long expireTime);
-
-    /**
-     * 设置一个key的过期时间
-     *
-     * @param key        key
-     * @param role       access token role
-     * @param expireTime 过期时间/单位s
-     */
-    void setExpireTime(String key, String role, Long expireTime);
 }
