@@ -122,7 +122,7 @@ spring:
 
   - value：api service，api唯一标识，通过前端传参service请求指定api。建议格式：业务对象.操作，例：user.login
   - needLogin：默认值：false。标明接口是否需要登录权限，前端传参params.token
-  - role：默认值：""。标明接口对应角色权限，比如admin/user，不同角色token在redis里的key前缀不一样，用于区分
+  - roles：默认值：{}。标明接口对应角色权限，例如{"admin", "user"}，不同角色token在redis里的key前缀不一样，用于区分，单个接口支持多个角色
 
 - accessToken操作
 
@@ -133,10 +133,10 @@ spring:
   @Override
   public void handle(Request request, Response response, Map<String, Object> resp, AccessToken accessToken) throws ApiException {
       // login
-      // @API(role = "")
+      // @API(roles = "")
       String token = accessTokenManager.save(AccessToken.builder().userId(admin.getId()).user(admin).build(), 7200L);
-      // @API(role = "admin")
-      String token = accessTokenManager.save(AccessToken.builder().userId(admin.getId()).user(admin).build(), "admin", 7200L);
+      // @API(roles = "admin")
+      String token = accessTokenManager.save(AccessToken.builder().userId(admin.getId()).user(admin).role("admin").build(), 7200L);
       resp.put("token", token);
   
       // logout
