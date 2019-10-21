@@ -59,7 +59,7 @@ public class CacheAccessTokenManager implements AccessTokenManager {
     public String save(AccessToken accessToken) {
         String key = DigestUtils.md5Hex(accessToken.toString() + LocalDateTime.now().toString());
         String token = getToken(key, accessToken);
-        RedisHelper.set(token, accessToken.setToken(key));
+        RedisHelper.set(token, accessToken.setToken(token));
         return key;
     }
 
@@ -87,7 +87,7 @@ public class CacheAccessTokenManager implements AccessTokenManager {
     public String save(AccessToken accessToken, Long expireTime) {
         String key = DigestUtils.md5Hex(accessToken.toString() + LocalDateTime.now().toString());
         String token = getToken(key, accessToken);
-        RedisHelper.set(token, accessToken.setToken(key), expireTime);
+        RedisHelper.set(token, accessToken.setToken(token), expireTime);
         return key;
     }
 
