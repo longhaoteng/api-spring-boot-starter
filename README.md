@@ -32,8 +32,6 @@ spring:
          # HEADER  api value在request的请求头中
          # BODY  api value在request的请求体中
          # default：BODY
-    restExpireTime: # 每次请求后重置access token有效时间，类型Long
-                    # 不填则在请求后不重置有效时间
     key: # 不为空表示接口开启AES加密 长度可以为16/24/32 即128/192/256bit(16/24/32bytes)             
 ```
 
@@ -143,3 +141,7 @@ spring:
       accessTokenManager.remove(accessToken.getToken());
   }
   ```
+  
+- 拦截器
+
+  实现HandlerInterceptor接口，与Spring HandlerInterceptor接口类似
