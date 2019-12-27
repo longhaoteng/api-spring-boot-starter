@@ -32,6 +32,9 @@ public class ApiEngine {
     // ApiHandler mapping
     private Map<String, ApiHandler> mapping;
 
+    @Autowired
+    private HandlerInterceptor handlerInterceptor;
+
     public ApiEngine(AccessTokenManager accessTokenManager, List<ApiHandler> handlers) {
         this.accessTokenManager = accessTokenManager;
         mapping = new HashMap<>();
@@ -54,50 +57,54 @@ public class ApiEngine {
      * @return response
      */
     public Response handle(Request request) {
-        ApiHandler handler = properties.getLoc() != null && properties.getLoc().equals(ApiLoc.HEADER) ? mapping.get(
-                request.getServlet().getHeader("service")) : mapping.get(request.getService());
-        if (handler == null) {
-            return Response.builder().code(HttpStatus.NOT_FOUND.value()).message("API not found.").build();
-        }
         try {
-            String token = request.getParameter("token");
-            API api = handler.getClass().getAnnotation(API.class);
-            AccessToken accessToken = null;
-            // need login
-            if (api.needLogin()) {
-                if (token == null) {
-                    // not logged in
-                    return Response.builder().code(HttpStatus.UNAUTHORIZED.value()).message("Not logged in.").build();
+            if (handlerInterceptor.preHandle(request)) {
+                ApiHandler handler =
+                        properties.getLoc() != null && properties.getLoc().equals(ApiLoc.HEADER) ? mapping.get(
+                                request.getServlet().getHeader("service")) : mapping.get(request.getService());
+                if (handler == null) {
+                    return Response.builder().code(HttpStatus.NOT_FOUND.value()).message("API not found.").build();
                 }
-                // role
-                if (api.roles().length > 0) {
-                    for (String role : api.roles()) {
-                        accessToken = accessTokenManager.find(token, role);
-                        if (accessToken != null) break;
+                String token = request.getParameter("token");
+                API api = handler.getClass().getAnnotation(API.class);
+                AccessToken accessToken = null;
+                // need login
+                if (api.needLogin()) {
+                    if (token == null) {
+                        // not logged in
+                        return Response.builder()
+                                .code(HttpStatus.UNAUTHORIZED.value())
+                                .message("Not logged in.")
+                                .build();
                     }
-                } else {
-                    accessToken = accessTokenManager.find(token);
-                }
-                if (accessToken == null) {
-                    // login expires
-                    return Response.builder()
-                            .code(HttpStatus.PROXY_AUTHENTICATION_REQUIRED.value())
-                            .message("Login expires.")
-                            .build();
-                } else {
-                    // reset token expiration time
-                    if (properties.getRestExpireTime() != null) {
-                        accessTokenManager.setExpireTime(accessToken.getToken(), properties.getRestExpireTime());
+                    // role
+                    if (api.roles().length > 0) {
+                        for (String role : api.roles()) {
+                            accessToken = accessTokenManager.find(token, role);
+                            if (accessToken != null) break;
+                        }
+                    } else {
+                        accessToken = accessTokenManager.find(token);
+                    }
+                    if (accessToken == null) {
+                        // login expires
+                        return Response.builder()
+                                .code(HttpStatus.PROXY_AUTHENTICATION_REQUIRED.value())
+                                .message("Login expires.")
+                                .build();
                     }
                 }
+                Response response = Response.builder().build();
+                Map<String, Object> resp = Maps.newHashMap();
+                handlerInterceptor.postHandle(request, response, resp, accessToken);
+                handler.handle(request, response, resp, accessToken);
+                handlerInterceptor.afterCompletion(request, response, resp, accessToken);
+                if (response.getCode() == null) {
+                    response.setCode(HttpStatus.OK.value()).setMessage("Success.");
+                }
+                return response.setData(resp);
             }
-            Response response = Response.builder().build();
-            Map<String, Object> resp = Maps.newHashMap();
-            handler.handle(request, response, resp, accessToken);
-            if (response.getCode() == null) {
-                response.setCode(HttpStatus.OK.value()).setMessage("Success.");
-            }
-            return response.setData(resp);
+            return Response.builder().code(HttpStatus.FORBIDDEN.value()).message("Forbidden.").build();
         } catch (ApiException e) {
             return Response.builder().code(e.getCode()).message(e.getMessage()).build();
         } catch (Exception e) {
