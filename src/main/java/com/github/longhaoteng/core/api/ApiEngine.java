@@ -96,11 +96,12 @@ public class ApiEngine {
                 }
                 Response response = Response.builder().build();
                 Map<String, Object> resp = Maps.newHashMap();
-                handlerInterceptor.postHandle(request, response, resp, accessToken);
-                handler.handle(request, response, resp, accessToken);
-                handlerInterceptor.afterCompletion(request, response, resp, accessToken);
-                if (response.getCode() == null) {
-                    response.setCode(HttpStatus.OK.value()).setMessage("Success.");
+                if (handlerInterceptor.postHandle(request, response, resp, accessToken)) {
+                    handler.handle(request, response, resp, accessToken);
+                    handlerInterceptor.afterCompletion(request, response, resp, accessToken);
+                    if (response.getCode() == null) {
+                        response.setCode(HttpStatus.OK.value()).setMessage("Success.");
+                    }
                 }
                 return response.setData(resp);
             }

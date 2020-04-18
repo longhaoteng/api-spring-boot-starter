@@ -16,6 +16,7 @@ public interface HandlerInterceptor {
      * Executed before ApiHandler
      *
      * @param request 请求参数
+     * @return whether to pass
      * @throws Exception in case of errors
      */
     default boolean preHandle(Request request) throws Exception {
@@ -30,9 +31,12 @@ public interface HandlerInterceptor {
      * @param response    响应
      * @param resp        响应参数
      * @param accessToken token
+     * @return whether to pass
      * @throws Exception in case of errors
      */
-    default void postHandle(Request request, Response response, Map<String, Object> resp, AccessToken accessToken) throws Exception {}
+    default boolean postHandle(Request request, Response response, Map<String, Object> resp, AccessToken accessToken) throws Exception {
+        return true;
+    }
 
     /**
      * Callback after completion of request processing
