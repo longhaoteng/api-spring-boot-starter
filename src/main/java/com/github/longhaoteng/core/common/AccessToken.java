@@ -23,6 +23,9 @@ public class AccessToken implements Serializable {
     // user id
     private Object userId;
 
+    // token key
+    private String key;
+
     // token
     private String token;
 

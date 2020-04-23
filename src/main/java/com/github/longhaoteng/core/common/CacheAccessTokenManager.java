@@ -120,6 +120,7 @@ public class CacheAccessTokenManager implements AccessTokenManager {
      * @return
      */
     private String getToken(String key, AccessToken accessToken) {
+        accessToken.setKey(key);
         if (StringUtils.isBlank(accessToken.getRole())) {
             return key;
         } else {
